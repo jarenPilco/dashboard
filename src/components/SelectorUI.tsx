@@ -1,15 +1,18 @@
-import { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function SelectorUI() {
+// Definimos las props que recibe para comunicarse con App.tsx
+interface SelectorUIProps {
+    selectedCity: string;
+    onCityChange: (city: string) => void;
+}
 
-    const [cityInput, setCityInput] = useState('');
+export default function SelectorUI({ selectedCity, onCityChange }: SelectorUIProps) {
 
     const handleChange = (event: SelectChangeEvent<string>) => {
-        setCityInput(event.target.value);
+        onCityChange(event.target.value); // Envía la ciudad seleccionada al componente App
     };
 
     return (
@@ -19,20 +22,15 @@ export default function SelectorUI() {
                 labelId="city-select-label"
                 id="city-simple-select"
                 label="Ciudad"
-                value={cityInput}
-                onChange={handleChange}>
-                <MenuItem disabled><em>Seleccione una ciudad</em></MenuItem>
+                value={selectedCity} // Recibe el valor controlado desde App
+                onChange={handleChange}
+            >
+                <MenuItem disabled value=""><em>Seleccione una ciudad</em></MenuItem>
                 <MenuItem value={'guayaquil'}>Guayaquil</MenuItem>
                 <MenuItem value={'quito'}>Quito</MenuItem>
                 <MenuItem value={'manta'}>Manta</MenuItem>
                 <MenuItem value={'cuenca'}>Cuenca</MenuItem>
             </Select>
-
-            {cityInput && (
-                <p>
-                    Información del clima en <span style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{cityInput}</span>
-                </p>
-            )}
         </FormControl>
     );
 }
