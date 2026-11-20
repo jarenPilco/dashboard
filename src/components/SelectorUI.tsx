@@ -1,18 +1,21 @@
+import { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-// Definimos las props que recibe para comunicarse con App.tsx
-interface SelectorUIProps {
-    selectedCity: string;
-    onCityChange: (city: string) => void;
+interface SelectorProps {
+    onOptionSelect: (option: string) => void;
 }
 
-export default function SelectorUI({ selectedCity, onCityChange }: SelectorUIProps) {
+export default function SelectorUI({ onOptionSelect }: SelectorProps) {
+
+    const [cityInput, setCityInput] = useState('');
 
     const handleChange = (event: SelectChangeEvent<string>) => {
-        onCityChange(event.target.value); // Envía la ciudad seleccionada al componente App
+        const selectedValue = event.target.value;
+        setCityInput(selectedValue);
+        onOptionSelect(selectedValue);
     };
 
     return (
@@ -22,15 +25,20 @@ export default function SelectorUI({ selectedCity, onCityChange }: SelectorUIPro
                 labelId="city-select-label"
                 id="city-simple-select"
                 label="Ciudad"
-                value={selectedCity} // Recibe el valor controlado desde App
-                onChange={handleChange}
-            >
-                <MenuItem disabled value=""><em>Seleccione una ciudad</em></MenuItem>
+                value={cityInput}
+                onChange={handleChange}>
+                <MenuItem disabled><em>Seleccione una ciudad</em></MenuItem>
                 <MenuItem value={'guayaquil'}>Guayaquil</MenuItem>
                 <MenuItem value={'quito'}>Quito</MenuItem>
                 <MenuItem value={'manta'}>Manta</MenuItem>
                 <MenuItem value={'cuenca'}>Cuenca</MenuItem>
             </Select>
+
+            {cityInput && (
+                <p>
+                    Información del clima en <span style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{cityInput}</span>
+                </p>
+            )}
         </FormControl>
     );
 }
